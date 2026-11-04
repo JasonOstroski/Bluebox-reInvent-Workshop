@@ -1,6 +1,21 @@
 {
   "name": "Bluebox Workshop",
   "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "customizations": {
+    "codespaces": {
+      "secrets": {
+        "BLUEBOX_TOKEN": {
+          "description": "Bluebox access token for non-interactive CLI authentication."
+        },
+        "OTEL_EXPORTER_OTLP_ENDPOINT": {
+          "description": "OTLP ingest endpoint URL from Bluebox Setup."
+        },
+        "OTEL_EXPORTER_OTLP_HEADERS": {
+          "description": "Full OTLP authentication header value from Bluebox Setup, without angle brackets."
+        }
+      }
+    }
+  },
   "remoteEnv": {
     "PATH": "${containerEnv:HOME}/.bluebox/bin:${containerEnv:PATH}"
   },

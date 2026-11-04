@@ -15,6 +15,21 @@ For non-interactive authentication, create a Bluebox access token under
 creating the Codespace. Use Codespaces secrets, not Actions secrets or committed
 environment files. Each participant should use their own token.
 
+Add these two Codespaces secrets for telemetry, also granting them access to
+this repository before creating the Codespace:
+
+| Secret | Value |
+| --- | --- |
+| `OTEL_EXPORTER_OTLP_ENDPOINT` | OTLP ingest endpoint URL from Bluebox Setup. |
+| `OTEL_EXPORTER_OTLP_HEADERS` | Full authentication header value from Bluebox Setup, without angle brackets. |
+
+The Codespaces configuration recommends all three secrets during creation.
+GitHub injects their values as environment variables; no values are stored in
+this repository. Run `make up` in the Codespace to start the app with telemetry:
+Compose already forwards the two OTel variables to the shop and payment services.
+If you add or change a secret in an existing Codespace, stop and restart it to
+pick up the new value.
+
 The installation script removes the token from its own environment before
 downloading anything. The CLI reads the secret from the Codespace environment
 when you run commands; no login or token file is needed.
