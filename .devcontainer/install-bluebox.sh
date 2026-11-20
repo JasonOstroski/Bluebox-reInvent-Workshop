@@ -36,4 +36,12 @@ curl -fsSL --retry 3 --connect-timeout 15 --max-time 300 --proto '=https' --prot
 printf '%s  %s\n' "$checksum" "$download_dir/bluebox" | sha256sum -c - >/dev/null
 chmod 755 "$download_dir/bluebox"
 mv -f "$download_dir/bluebox" "$install_dir/bluebox"
+
+bashrc="$HOME/.bashrc"
+path_entry='export PATH="$HOME/.bluebox/bin:$PATH"'
+touch "$bashrc"
+if ! grep -Fqx "$path_entry" "$bashrc"; then
+  printf '\n%s\n' "$path_entry" >> "$bashrc"
+fi
+
 printf 'Bluebox CLI installed.\n'
