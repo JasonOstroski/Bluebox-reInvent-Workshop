@@ -6,10 +6,11 @@ A small, editable ecommerce application for workshops. It has a browser frontend
 
 Create a Codespace from this repository. On creation (and container rebuild),
 Codespaces installs the latest Bluebox CLI automatically, verifies its SHA-256
-checksum before installation, and adds it to `~/.bashrc` so new terminals find
-it on `PATH`. There are no setup prompts, browser sign-in, or automatic
-application startup. In a terminal that was already open during installation,
-run `export PATH="$HOME/.bluebox/bin:$PATH"` once or open a new terminal.
+checksum before installation, exposes it on `PATH` to all container processes,
+and installs Bluebox skills for GitHub Copilot in `.github/skills/`. There are
+no setup prompts, browser sign-in, or automatic application startup. Rebuild
+the Codespace after changing the devcontainer configuration so the agent and
+terminals receive the updated environment and skills.
 
 For non-interactive authentication, create a Bluebox access token under
 **Account > Access tokens**, then add it as a GitHub **Codespaces secret** named

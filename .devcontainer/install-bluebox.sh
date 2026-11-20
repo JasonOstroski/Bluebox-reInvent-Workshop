@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-unset BLUEBOX_TOKEN
-
 case "$(uname -s)" in
   Linux) os=linux ;;
   *) printf 'Bluebox Codespaces installation requires Linux.\n' >&2; exit 1 ;;
@@ -26,22 +24,19 @@ mkdir -p "$install_dir"
 download_dir="$(mktemp -d "$install_dir/.install-XXXXXX")"
 trap 'rm -rf "$download_dir"' EXIT
 
-metadata="$(curl -fsS --retry 3 --connect-timeout 15 --max-time 120 --proto '=https' \
+metadata="$(BLUEBOX_TOKEN= curl -fsS --retry 3 --connect-timeout 15 --max-time 120 --proto '=https' \
   "https://app.bluebox.ai/v1/cli/latest?os=$os&arch=$arch")"
-download_url="$(printf '%s' "$metadata" | jq -er '.download_url | strings | select(length > 0)')"
-checksum="$(printf '%s' "$metadata" | jq -er '.sha256 | strings | select(test("^[0-9a-fA-F]{64}$"))')"
+download_url="$(printf '%s' "$metadata" | BLUEBOX_TOKEN= jq -er '.download_url | strings | select(length > 0)')"
+checksum="$(printf '%s' "$metadata" | BLUEBOX_TOKEN= jq -er '.sha256 | strings | select(test("^[0-9a-fA-F]{64}$"))')"
 
-curl -fsSL --retry 3 --connect-timeout 15 --max-time 300 --proto '=https' --proto-redir '=https' \
+BLUEBOX_TOKEN= curl -fsSL --retry 3 --connect-timeout 15 --max-time 300 --proto '=https' --proto-redir '=https' \
   -o "$download_dir/bluebox" "$download_url"
-printf '%s  %s\n' "$checksum" "$download_dir/bluebox" | sha256sum -c - >/dev/null
+printf '%s  %s\n' "$checksum" "$download_dir/bluebox" | BLUEBOX_TOKEN= sha256sum -c - >/dev/null
 chmod 755 "$download_dir/bluebox"
 mv -f "$download_dir/bluebox" "$install_dir/bluebox"
 
-bashrc="$HOME/.bashrc"
-path_entry='export PATH="$HOME/.bluebox/bin:$PATH"'
-touch "$bashrc"
-if ! grep -Fqx "$path_entry" "$bashrc"; then
-  printf '\n%s\n' "$path_entry" >> "$bashrc"
+if ! "$install_dir/bluebox" skills install --copilot; then
+  printf 'Warning: Bluebox CLI installed, but Copilot skills could not be installed. Check that the BLUEBOX_TOKEN Codespaces secret is available, then run `bluebox skills install --copilot` to retry.\n' >&2
 fi
 
 printf 'Bluebox CLI installed.\n'

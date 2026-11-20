@@ -16,7 +16,7 @@
       }
     }
   },
-  "remoteEnv": {
+  "containerEnv": {
     "PATH": "${containerEnv:HOME}/.bluebox/bin:${containerEnv:PATH}"
   },
   "postCreateCommand": "bash .devcontainer/install-bluebox.sh"
