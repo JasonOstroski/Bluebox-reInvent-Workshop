@@ -4,9 +4,6 @@
   "customizations": {
     "codespaces": {
       "secrets": {
-        "BLUEBOX_TOKEN": {
-          "description": "Bluebox access token for non-interactive CLI authentication."
-        },
         "OTEL_EXPORTER_OTLP_ENDPOINT": {
           "description": "OTLP ingest endpoint URL from Bluebox Setup."
         },
@@ -15,9 +12,5 @@
         }
       }
     }
-  },
-  "containerEnv": {
-    "PATH": "${containerEnv:HOME}/.bluebox/bin:${containerEnv:PATH}"
-  },
-  "postCreateCommand": "bash .devcontainer/install-bluebox.sh"
+  }
 }
